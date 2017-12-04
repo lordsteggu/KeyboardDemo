@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">Close</button>
+    </ion-buttons>
+    <ion-title>Demo</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-slides (ionSlideDidChange)="slideChanged()" (shouldLockSwipeToNext)="true" style="position: relative; top: 0; bottom: 0;" pager="true">
+    <ion-slide *ngFor="let observation of observationList; let i = index">
+
+      <form [formGroup]="observation.FormGroup" style=" position: absolute; top: 0; width: 100%;">
+
+        <ion-item (disabled)="true" style="flex: 1" class="greenzone-item">
+          <ion-label floating color="primary">Observation Type</ion-label>
+          <ion-select class="no-scroll" formControlName="ObservationType" interface="popover" [compareWith]="compareFn">
+            <ion-option [value]="observationType" *ngFor="let observationType of observationItemTypes">{{observationType.Name}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="greenzone-item">
+          <ion-label floating color="primary">Observation Reason</ion-label>
+          <ion-select class="no-scroll" formControlName="AuditItemReason" interface="popover" [compareWith]="compareFn">
+            <ion-option [value]="auditItemReason" *ngFor="let auditItemReason of auditReasonTypes">{{auditItemReason.Name}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item no-lines  class="greenzone-item">
+          <ion-label color="primary" floating>Notes</ion-label>
+          <ion-textarea (ionChange)="onNotesChanged()" (ionFocus)="onFocus()" style="height: auto; resize: none" formControlName="Notes"></ion-textarea>
+        </ion-item>
+
+      </form>
+    </ion-slide>
+  </ion-slides>
+
+
+</ion-content>
+<ion-footer>
+  <button *ngIf="currentIndex > 0" style="float: left; margin: 10px;" (click)="SlidePrev()" ion-button secondary>Prev</button>
+
+  <button style="float: right; margin: 10px;" (click)="(currentIndex == 4 ? save(currentObservation.FormGroup) : SlideNext())" ion-button secondary [disabled]="!currentObservation.FormGroup.controls.Notes.value">{{currentIndex == 4 ? 'Save' : 'Next'}}</button>
+  <button style="float: right; margin: 10px;" (click)="SkipSlide()" ion-button secondary>Skip</button>
+
+  <ion-spinner class="Modal-Spinner" name="crescent"></ion-spinner>
+</ion-footer>
